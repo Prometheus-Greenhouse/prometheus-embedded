@@ -2,6 +2,9 @@
 #include <PubSubClient.h>
 #include <iostream>
 #include <algorithm>
+
+#include<ArduinoJson.h>
+
 const char* ssid = "long 2.4G";
 const char* password = "Ld201199";
 const char* mqtt_server = "192.168.1.3";
@@ -18,7 +21,7 @@ const int ledGPIO5=5;
 const char *Topic="sensor/0";
 String message;
 String _topic;
-String mess_setup="fuck off.";
+String mess_setup;
 const char *Toopic="available";
 const char *sensor1="sensor/1";
 int counter=0;
@@ -26,6 +29,9 @@ int counter1=0;
 String split_str[5];
 char c;
 String dataIn;
+#define num_seed 5
+String uuid[num_seed];
+
 void setup() {
   pinMode(ledGPIO5,OUTPUT);
   pinMode(WaterSensor,OUTPUT);
@@ -33,6 +39,12 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
+
+  for (int i=0;i<num_seed;i++)
+  {
+    uuid[i]=uuid4();
+  }
+
 }
 void setup_wifi() {
 
@@ -57,6 +69,10 @@ void setup_wifi() {
   client.subscribe("ESP8266/4");
   client.subscribe("ESP8266/5");
   client.subscribe("allow");
+  for(int i=0;i<num_seed;i++)
+  {
+    client.subscribe(uuid[i].c_str());
+  }
 }
 int WaterLevel()
 {
@@ -94,6 +110,13 @@ void reconnect() {
       client.subscribe("ESP8266/4");
       client.subscribe("ESP8266/5");
       client.subscribe("allow");
+
+
+    for(int i=0;i<num_seed;i++)
+  {
+    client.subscribe(uuid[i].c_str());
+  }
+
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -101,6 +124,36 @@ void reconnect() {
     }
   }
 }
+
+
+
+String uuid4(){
+  String res="";
+  res+=hex_print(8,0,15);
+  res+="-";
+  res+=hex_print(4,0,15);
+  res+="-";
+  res+="4";
+  res+=hex_print(3,0,15);
+  res+="-";
+  res+=hex_print(1,8,11);
+  res+=hex_print(3,0,15);
+  res+="-";
+  res+=hex_print(12,0,15);
+  return res;
+  
+}
+
+String hex_print(int n,int mn ,int mx ){
+String res="";
+for(;n>0;n--){
+int X = random(mn,mx);
+String re=String( X ,HEX );
+res+=re;
+}
+return res;
+}
+
 
 String splitString(String s,String deli)
 {
@@ -154,7 +207,15 @@ void loop() {
   client.loop();
  if(counter<1)
  {
+
+  for(int i=0;i<5;i++)
+  {
+    mess_setup="text:";
+    mess_setup+=uuid[i];
  client.publish(Toopic,mess_setup.c_str());
+ mess_setup="";
+  }
+
  counter++;
  }
   String result=splitString(message,":");
@@ -164,7 +225,7 @@ void loop() {
   strcpy(topic_sensor,result.c_str());
   unsigned long now = millis();
   if (now - lastMsg > 1000) {
-      lastMsg=now;
+     lastMsg=now;
      read_data(topic_sensor);
      result+="\n";
      Serial.println(result);

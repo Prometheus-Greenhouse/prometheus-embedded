@@ -4,7 +4,6 @@
 #include<DHT.h>
 #define DHTPIN 4
 DHT dht(DHTPIN,DHT11);
-LiquidCrystal_I2C lcd(0X27,16,2);
 
 #define WaterSensor 2
 #define SensorIn A0
@@ -26,8 +25,6 @@ void setup() {
   pinMode(R,OUTPUT);
   pinMode(G,OUTPUT);
   pinMode(B,OUTPUT);
-  lcd.init();
-  lcd.backlight();
   dht.begin();
 }
 
@@ -44,10 +41,6 @@ int waterLevel()
 void handleTopic()
   {
     int water=waterLevel();
-    lcd.setCursor(2,0);
-    lcd.print("Water Level:");
-    lcd.setCursor(2,1);
-    lcd.print(water);
     res="";
     res+=String(water)+"\n";
     Serial3.println(res);
@@ -136,5 +129,5 @@ else if(dataIn=="sensor/2")
    c=0;
    dataIn="";
 }
-RGB(0,0,255);
+
 }
