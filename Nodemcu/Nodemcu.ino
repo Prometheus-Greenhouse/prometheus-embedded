@@ -7,12 +7,27 @@
 
 const char* ssid = "long 2.4G";
 const char* password = "Ld201199";
+<<<<<<< HEAD
+<<<<<<< HEAD
 const char* mqtt_server = "192.168.1.3";
+=======
+const char* mqtt_server = "192.168.1.4";
+>>>>>>> 6571d45 (Update new)
+=======
+const char* mqtt_server = "192.168.1.3";
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 WiFiClient espClient;
 PubSubClient client(espClient);
 unsigned long lastMsg = 0;
 #define MSG_BUFFER_SIZE  (50)
+<<<<<<< HEAD
+<<<<<<< HEAD
 #define EspSerial Serial3
+=======
+>>>>>>> 6571d45 (Update new)
+=======
+#define EspSerial Serial3
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
 #define WaterSensor 4
@@ -21,7 +36,15 @@ const int ledGPIO5=5;
 const char *Topic="sensor/0";
 String message;
 String _topic;
+<<<<<<< HEAD
+<<<<<<< HEAD
 String mess_setup;
+=======
+String mess_setup="";
+>>>>>>> 6571d45 (Update new)
+=======
+String mess_setup;
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 const char *Toopic="available";
 const char *sensor1="sensor/1";
 int counter=0;
@@ -31,7 +54,17 @@ char c;
 String dataIn;
 #define num_seed 5
 String uuid[num_seed];
+<<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+String all_mess[num_seed];
+int counter_all=0; 
+String object[num_seed];
+>>>>>>> 6571d45 (Update new)
+=======
+
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 void setup() {
   pinMode(ledGPIO5,OUTPUT);
   pinMode(WaterSensor,OUTPUT);
@@ -44,6 +77,13 @@ void setup() {
   {
     uuid[i]=uuid4();
   }
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  object_setup();
+>>>>>>> 6571d45 (Update new)
+=======
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 
 }
 void setup_wifi() {
@@ -74,6 +114,10 @@ void setup_wifi() {
     client.subscribe(uuid[i].c_str());
   }
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 int WaterLevel()
 {
   digitalWrite(WaterSensor,HIGH);
@@ -83,6 +127,19 @@ int WaterLevel()
   return value;
 }
 
+<<<<<<< HEAD
+=======
+void object_setup()
+{
+  object[0]="Light";
+  object[1]="Water";
+  object[2]="Moisture";
+  object[3]="";
+  object[4]="";
+}
+>>>>>>> 6571d45 (Update new)
+=======
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
@@ -93,8 +150,20 @@ void callback(char* topic, byte* payload, unsigned int length) {
     message+=(char)payload[i];
   }
   message+="\n";
+<<<<<<< HEAD
+<<<<<<< HEAD
   _topic+=topic;
   _topic+="\n";
+=======
+  all_mess[counter_all]=message;
+  _topic+=topic;
+  _topic+="\n";
+  counter_all+=1;
+>>>>>>> 6571d45 (Update new)
+=======
+  _topic+=topic;
+  _topic+="\n";
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 }
 
 void reconnect() {
@@ -110,14 +179,30 @@ void reconnect() {
       client.subscribe("ESP8266/4");
       client.subscribe("ESP8266/5");
       client.subscribe("allow");
+<<<<<<< HEAD
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 6571d45 (Update new)
+=======
+
+
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
     for(int i=0;i<num_seed;i++)
   {
     client.subscribe(uuid[i].c_str());
   }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
     } else {
+=======
+  } else {
+>>>>>>> 6571d45 (Update new)
+=======
+    } else {
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");      
@@ -141,9 +226,19 @@ String uuid4(){
   res+="-";
   res+=hex_print(12,0,15);
   return res;
+<<<<<<< HEAD
+<<<<<<< HEAD
   
 }
 
+=======
+}
+>>>>>>> 6571d45 (Update new)
+=======
+  
+}
+
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 String hex_print(int n,int mn ,int mx ){
 String res="";
 for(;n>0;n--){
@@ -207,6 +302,10 @@ void loop() {
   client.loop();
  if(counter<1)
  {
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
 
   for(int i=0;i<5;i++)
   {
@@ -230,6 +329,34 @@ void loop() {
      result+="\n";
      Serial.println(result);
     String res=""+_topic+message;
+<<<<<<< HEAD
+=======
+  for(int i=0;i<num_seed;i++)
+  {
+    mess_setup="text:"+uuid[i];
+ client.publish(Toopic,mess_setup.c_str());
+ mess_setup="";
+  }
+ counter++;
+ }
+  unsigned long now = millis();
+  if (now - lastMsg > 1000) {
+   for(int i=0;i<num_seed;i++)
+   {
+    String result=splitString(all_mess[i],":");
+    result.trim();
+    result+=":"+object[i];
+  int lenght=result.length();
+  char topic_sensor[lenght+1];
+  strcpy(topic_sensor,result.c_str());
+      lastMsg=now;
+     read_data(topic_sensor);
+     result+="\n";
+     Serial.println(result);
+   }
+>>>>>>> 6571d45 (Update new)
+=======
+>>>>>>> 8420ca72ea7cdd18c1c61bd9a98b09b9be8a21f0
     
   }
 }
