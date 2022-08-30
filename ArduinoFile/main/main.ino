@@ -1,9 +1,4 @@
-#include<SoftwareSerial.h>
-#include<Wire.h>
-#include<LiquidCrystal_I2C.h>
-#include<DHT.h>
 #include "arduino_handle.h"
-#define DHTPIN 4
 #define WaterSensor 2
 #define SensorIn A0
 #define MoistureSensor A5
@@ -13,9 +8,10 @@
 #define G 12
 #define B 11
 Water water(SensorIn,WaterSensor);
-Temparature temp(DHTPIN);
-Light light(LightSensor);
+Light light_handle(LightSensor);
 Moisture moisture(MoistureSensor);
+char c;
+String dataIn;
 RGB rgb(R,G,B);
 void setup() {
   Serial.begin(57600);
@@ -25,10 +21,46 @@ void setup() {
   pinMode(R,OUTPUT);
   pinMode(G,OUTPUT);
   pinMode(B,OUTPUT);
-  temp.init();
-} 
+   } 
+
+
 void loop() {
-readData();
+ while(Serial3.available()>0)
+{
+ c=Serial3.read();
+  if(c=='\n')
+  {
+    break;
+  }
+  else
+  {
+    dataIn+=c;
+  }
+}
+if(c=='\n')
+{
+String result=splitString(dataIn,":");
+result.trim();
+if(dataIn=="Light")
+{ light_handle.lightTopic();
+  delay(2000);
+}
+else if(dataIn=="Water")
+{ water.waterTopic();
+  delay(2000);
+}
+else if(dataIn=="Moisture")
+{
+  moisture.moistureTopic();
+  delay(2000);
+}
+   c=0;
+   dataIn="";
+}
+else
+{
+Serial.println(dataIn);
+}
 for(int i=0;i<255;i++)
 {
   rgb.rgbColor(i,i,i);

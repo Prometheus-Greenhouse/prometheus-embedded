@@ -1,8 +1,7 @@
 #include "arduino_handle.h"
+
 int light;
 int MoistureValue;
-char c;
-String dataIn;
 String res;
 Water::Water(byte SensorIn,byte WaterSensor)
 {
@@ -25,18 +24,9 @@ void Water::waterTopic()
     Serial3.println(res);
 }
 
-
- 
-Temperature::Temperature(byte DHTPIN)
-{
-  this->DHTPIN=DHTPIN;
-}
-void Temparature::init()
-{
+ void temperatureTopic()
+{ DHT dht(DHTPIN,DHT11); 
   dht.begin();
-}
-void temperatureTopic()
-{
   float h=dht.readHumidity();
     float t=dht.readTemperature();
     Serial.print("Humidity:");
@@ -44,10 +34,9 @@ void temperatureTopic()
     Serial.print("Temperature:");
     Serial.println(t);
     res="";
-    res+=String(h)+" "+String(t)+" \n";
+    res+=String(h)+" "+String(t)+"\n";
+    Serial3.println(res);
 }
-
-
 
 Moisture::Moisture(byte MoistureSensor)
 {
@@ -72,7 +61,7 @@ Light::Light(byte LightSensor)
 {
   this->LightSensor=LightSensor;
 }
-Light::lightTopic()
+void Light::lightTopic()
 
 {
    light=analogRead(LightSensor);
@@ -107,7 +96,7 @@ Light::lightTopic()
 
 
 
-void splitString(String s,Srting deli)
+String splitString(String s,String deli)
 {
  int from=s.indexOf(deli);
  String result="";
@@ -137,44 +126,4 @@ void RGB::rgbColor(int r,int g,int b)
   analogWrite(R,r);
   analogWrite(G,g);
   analogWrite(B,b);
-}
-void readData()
-{
-  while(Serial3.available()>0)
-{
- c=Serial3.read();
-  if(c=='\n')
-  {
-    break;
-  }
-  else
-  {
-    dataIn+=c;
-  }
-}
-if(c=='\n')
-{
-String result=splitString(dataIn,":");
-result.trim();
-if(dataIn=="Light")
-{
-  light.lightTopic();
-  delay(2000);
-}
-else if(dataIn=="Water")
-{ water.waterTopic();
-  delay(2000);
-}
-else if(dataIn=="Moisture")
-{
-  moisture.moistureTopic();
-  delay(2000);
-}
-   c=0;
-   dataIn="";
-}
-else
-{
-Serial.println(dataIn);
-}
 }
