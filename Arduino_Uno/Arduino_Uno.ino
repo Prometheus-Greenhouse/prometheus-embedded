@@ -2,8 +2,11 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <DHT.h>
+// #include <MemoryFree.h>
+// #include <EEPROM.h>
 #include "sensor_functions.h"
 #include "constants.h"
+
 
 DHT dht(consts::DHPIN, DHT11);
 // char c;
@@ -11,12 +14,16 @@ DHT dht(consts::DHPIN, DHT11);
 // String res;
 // int light = 0;
 
+SoftwareSerial espSerial(5, 6);
 
 void setup() {
-  Serial.begin(57600);
-  Serial3.begin(57600);
-  pinMode(consts::WATER_SENSOR, OUTPUT);
+  Serial.begin(115200);
+  espSerial.begin(115200);
+  // Serial3.begin(115200);
+
+  pinMode(consts::WATER_SENSOR_LED, OUTPUT);
   pinMode(consts::SOIL_MOISTURE_SENSOR_LED, OUTPUT);
+
   pinMode(consts::LED, OUTPUT);
   pinMode(consts::R, OUTPUT);
   pinMode(consts::G, OUTPUT);
@@ -26,12 +33,14 @@ void setup() {
 
 
 void loop() {
-  delay(2000);
+
   int waterLv = getWaterLevel();
-  Serial.println(String("Water level: ") + waterLv);
   int soilMoisture = getSoilMoisture();
-  Serial.println(String("Soil moisture: ") + soilMoisture);
-  Serial.println();
+  Serial.println(waterLv);
+  Serial.println(soilMoisture);
+  espSerial.write((String(consts::WATER_SENSOR) + "/" + waterLv + "|").c_str());
+  espSerial.write((String(consts::SOIL_MOISTURE_SENSOR) + "/" + soilMoisture + "|").c_str());
+  delay(3000);
 
   // while (Serial3.available() > 0) {
   //   c = Serial3.read();
@@ -54,3 +63,12 @@ void loop() {
   //   dataIn = "";
   // }
 }
+
+// void serialEvent3(){
+//   while(Serial3.available()){
+//     Serial.println("Recive from esp ->");
+//     char rs = Serial3.read();
+//     Serial.write(rs);
+//     Serial.println(rs);
+//   }
+// }

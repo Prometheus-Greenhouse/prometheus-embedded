@@ -2,10 +2,10 @@
 #include "constants.h"
 
 int getWaterLevel() {
-  digitalWrite(consts::WATER_SENSOR, HIGH);
+  digitalWrite(consts::WATER_SENSOR_LED, HIGH);
   delay(1000);
-  int value = analogRead(consts::SENSOR_IN);
-  digitalWrite(consts::WATER_SENSOR, LOW);
+  int value = analogRead(consts::WATER_SENSOR);
+  digitalWrite(consts::WATER_SENSOR_LED, LOW);
   delay(1000);
   return value;
 }

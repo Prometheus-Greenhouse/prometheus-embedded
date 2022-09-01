@@ -3,5 +3,5 @@
 #include <Arduino.h>
 
 String splitString(String s,String deli);
-
+String uuid4();
 #endif

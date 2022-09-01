@@ -3,7 +3,7 @@
 #include "constants.h"
 
 void setupWifi() {
-  Serial.print("Connecting to ");
+  Serial.println("Connecting to ");
   // WiFi.mode(WIFI_STA);
   WiFi.begin(consts::WIFI_SID, consts::WIFI_PASSWORD);
   Serial.println();
