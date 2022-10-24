@@ -1,55 +1,8 @@
 #include "mcu_handle.h"
-#define WaterSensor 4
-const int ledGPIO5=5;
-#define sensorIn A0
-const char *Topic="sensor/0";
-String message;
-String _topic;
-String mess_setup="";
-const char *Toopic="available";
-const char *sensor1="sensor/1";
-int counter=0;
-int counter1=0;
-String split_str[5];
-char c;
-String dataIn;
-#define num_seed 5
-String uuid[num_seed];
-String all_mess[num_seed];
-int counter_all=0; 
-String object[num_seed];
-void readData(const char* data)
-{  while(Serial.available()>0)
-  {
-    c=Serial.read();
-    if(c=='\n')
-    {
-      break;
-    }
-    else
-    {
-      dataIn+=c;
-    }
-  }
-  if(c=='\n')  
-  { 
-    dataIn.trim();
-    if(dataIn=="")
-    {
-     return;
-    }
-    else
-    {
-    client.publish(data,dataIn.c_str());
-    c=0;
-    dataIn="";
-    }
-  }
-}
-
-void splitString(String s,String deli)
+String* splitString(String s,String deli)
 {
   int from=s.indexOf(deli);
+  String* res=new String[2];
  String result="";
  String type="";
  for(int i=0;i<from;i++)
@@ -60,9 +13,31 @@ void splitString(String s,String deli)
  {
   result+=s[i];
  }
- return result;
+ res[0]=result;
+ res[1]=type;
+ return res;
 }
 
+String* splitFullString(String s,char delimeter)
+{
+  String* res=new String[10];
+  String temp="";
+  int c=0;
+  for(int i=0;i<s.length();i++)
+  {
+    if(s[i]==delimeter)
+    {
+      res[c++]=temp;
+      temp="";
+    }
+   else
+   {
+    temp+=s[i];
+   }
+  }
+  res[c+1]=temp;
+  return res;
+}
 String uuid4()
 {
   String res="";
@@ -91,32 +66,23 @@ res+=re;
 return res;
 }
 
-void handleData()
-{
-    unsigned long now = millis();
-  if (now - lastMsg > 1000) {
-   for(int i=0;i<num_seed;i++)
-   {
-    String result=splitString(all_mess[i],":");
-    result.trim();
-    result+=":"+object[i];
-  int lenght=result.length();
-  char topic_sensor[lenght+1];
-  strcpy(topic_sensor,result.c_str());
-      lastMsg=now;
-     readData(topic_sensor);
-     result+="\n";
-     Serial.println(result);
-   }
-    
+void pumpWater(byte SensorInput,String order)
+{ 
+  if(order=="1")
+  {
+    digitalWrite(SensorInput,HIGH);
+  }
+  else
+  {
+    digitalWrite(SensorInput,LOW);
   }
 }
 
 void object_setup(String object[])
 {
-  object[0]="Light";
-  object[1]="Water";
-  object[2]="Moisture";
-  object[3]="";
+  object[0]="Water";
+  object[1]="Moisture";
+  object[2]="Humidity";
+  object[3]="Temperature";
   object[4]="";
 }

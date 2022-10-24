@@ -1,10 +1,11 @@
 #ifndef MCU_HANDLE.H
 #define MCU_HANDLE.H
 #include <Arduino.h>
-void readData(const char* data);
-void splitString(String s,String deli);
+#define ARRAY_SIZE(x) sizeof(x)/sizeof(x[0])
+String *splitString(String s,String deli);
+String* splitFullString(String s,char delimeter);
 String uuid4();
 String hex_print(int n,int mn ,int mx);
-void handleData();
-void void object_setup(String object[]);
+void object_setup(String object[]);
+void pumpWater(byte SensorInput,String order);
 #endif

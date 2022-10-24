@@ -16,52 +16,44 @@ int Water::waterLevel()
   digitalWrite(WaterSensor,LOW);
   return value;
 }
-void Water::waterTopic()
+String Water::waterTopic()
 {
    int water=Water::waterLevel();
     res="";
-    res+=String(water)+"\n";
-    Serial3.println(res);
+    res+=String(water)+":Water+";
+    return res;
 }
 
- void temperatureTopic()
+ String temperatureTopic()
 { DHT dht(DHTPIN,DHT11); 
   dht.begin();
   float h=dht.readHumidity();
     float t=dht.readTemperature();
-    Serial.print("Humidity:");
-    Serial.println(h);
-    Serial.print("Temperature:");
-    Serial.println(t);
     res="";
-    res+=String(h)+" "+String(t)+"\n";
-    Serial3.println(res);
+    res+=String(h)+" "+String(t)+":Temperature";
+    return res;
 }
 
 Moisture::Moisture(byte MoistureSensor)
 {
   this->MoistureSensor=MoistureSensor;
 }
-void Moisture::moistureTopic()
+String Moisture::moistureTopic()
 {
    int limit=300;
   MoistureValue=analogRead(MoistureSensor);
-  if(MoistureValue<limit)
-  {
-    Serial3.println("No need water");
-  }
-  else
-  {
-    Serial3.println("Need Water");
-  }
+  String mois_res="";
+ mois_res=String(MoistureValue)+":Moisture+";
+ return mois_res;
 }
+
 
 
 Light::Light(byte LightSensor)
 {
   this->LightSensor=LightSensor;
 }
-void Light::lightTopic()
+String Light::lightTopic()
 
 {
    light=analogRead(LightSensor);
@@ -91,7 +83,7 @@ void Light::lightTopic()
     RGB(106,90,205);
    }
    res+="\n";
-   Serial3.println(res);
+   return res;
 }
 
 

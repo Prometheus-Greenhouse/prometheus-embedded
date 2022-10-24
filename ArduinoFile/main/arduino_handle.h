@@ -2,7 +2,8 @@
 #define ARDUINO_HANDLE.H
 #include <Arduino.h>
 #include<DHT.h>
-#define DHTPIN 4
+#include<Wire.h>
+#define DHTPIN 7
 class Water
 {
   private:
@@ -11,18 +12,17 @@ class Water
   public:
        Water(byte SensorIn,byte WaterSensor);
        int waterLevel();
-       void waterTopic();
+       String waterTopic();
 };
 
-void temperatureTopic();
-
+String temperatureTopic();
 class Moisture
 {
   private:
         byte MoistureSensor;
   public:
        Moisture(byte MoistureSensor);
-       void moistureTopic();
+       String moistureTopic();
 };
 
 class Light
@@ -31,7 +31,7 @@ class Light
          byte LightSensor;
   public:
         Light(byte LightSensor);
-        void lightTopic();
+        String lightTopic();
 };
 class RGB
 {private:
@@ -42,5 +42,6 @@ class RGB
       RGB(byte R,byte G,byte B);
       void rgbColor(int r,int g,int b);
 };
+void pumpWater(byte SensorInput,String order);
 String splitString(String s,String deli);
 #endif
