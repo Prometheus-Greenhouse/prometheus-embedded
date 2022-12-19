@@ -35,9 +35,10 @@ void setup() {
   return res;
 }
  void requestEvent()
-{ if(temp_humidTopic()=="")
-{
-  return;
+{ String temp=water.waterTopic()+moisture.moistureTopic()+ligh_object.lightTopic()+"\n";
+  if(temp_humidTopic()=="")
+{ Wire.write(temp.c_str());
+  return; 
 }
   String res=water.waterTopic()+moisture.moistureTopic()+temp_humidTopic()+light_object.lightTopic()+"\n";
   Wire.write(res.c_str());

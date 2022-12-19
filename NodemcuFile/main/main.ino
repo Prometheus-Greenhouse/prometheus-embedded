@@ -4,7 +4,7 @@
 #include<Wire.h>
 const char* ssid = "long 2.4G";
 const char* password = "Ld201199";
-const char* mqtt_server = "192.168.1.3";
+const char* mqtt_server = "192.168.1.7";
 #define MSG_BUFFER_SIZE  (50)
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
@@ -45,7 +45,6 @@ void setup() {
   mac_address=WiFi.macAddress();
   object_setup(object);}
 void setup_wifi() {
-
   delay(10);
   Serial.println();
   Serial.print("Connecting to ");
@@ -105,9 +104,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(message);
   digitalWrite(Pump,LOW);
  }
- }
-
- 
+ } 
   counter_all+=1;
 }
 
