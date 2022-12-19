@@ -47,36 +47,30 @@ Light::Light(byte LightSensor)
   this->LightSensor=LightSensor;
 }
 String Light::lightTopic()
-
-{
+{ String light_res="";
    light=analogRead(LightSensor);
    if(light<100)
    {
     res+=("Very bright");
-    RGB(255,0,0);
    }
    else if(light<200)
    {
     res+=("Bright");
-    RGB(0,0,255);
    }
    else if(light<500)
    {
     res+=("Light");
-    RGB(60,179,113);
    }
    else if(light<800)
    {
     res+=("Dim");
-    RGB(255,165,0);
    }
    else
    {
     res+=("Dark");
-    RGB(106,90,205);
    }
-   res+="\n";
-   return res;
+   light_res=String(light)+":L+";
+   return light_res;
 }
 
 

@@ -84,5 +84,5 @@ void object_setup(String object[])
   object[1]="Moisture";
   object[2]="Humidity";
   object[3]="Temperature";
-  object[4]="";
+  object[4]="Light";
 }

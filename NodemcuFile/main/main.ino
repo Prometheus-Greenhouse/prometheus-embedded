@@ -146,7 +146,7 @@ void reconnect() {
 void readData()
 {
   while(Wire.available()>0)
-  {Serial.println(Wire.available());
+  {
     c=Wire.read();
     if(c=='\n')
     {
@@ -167,7 +167,7 @@ void readData()
     else
     { 
       String* data_receive=splitFullString(dataIn,'+');
-      for(int i=0;i<3;i++)
+      for(int i=0;i<4;i++)
       {String data_sensor=data_receive[i];
       Serial.println(data_sensor);
       String* data_pub=splitString(data_sensor,":"); 
@@ -181,6 +181,10 @@ void readData()
     else if(data_pub[0]=="M")
     { 
       client.publish(send_topic,data_send);
+    }
+    else if(data_pub[0]=="L")
+    {
+      client.publish("sensor/45",data_send);
     }
     else
     {

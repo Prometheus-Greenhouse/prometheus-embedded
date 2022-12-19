@@ -1,7 +1,6 @@
 #ifndef ARDUINO_HANDLE.H
 #define ARDUINO_HANDLE.H
 #include <Arduino.h>
-
 #include<Wire.h>
 class Water
 {
