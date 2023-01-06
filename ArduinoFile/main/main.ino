@@ -2,17 +2,15 @@
 #define WaterSensor 2
 #define SensorIn A0
 #define MoistureSensor A1
+#define LightSensor A2
 #include<DHT.h>
 #define DHTPIN 7
 DHT dht(DHTPIN,DHT11);
-#define R 13
-#define G 12
-#define B 11
 Water water(SensorIn,WaterSensor);
 Moisture moisture(MoistureSensor);
+Light light_object(LightSensor);
 int c;
 String dataIn;
-RGB rgb(R,G,B);
 void setup() {
   Serial.begin(9600);
     Wire.begin(8);
@@ -32,10 +30,11 @@ void setup() {
 }
  void requestEvent()
 { if(temp_humidTopic()=="")
-{
-  return;
+{ 
+  String res=water.waterTopic()+moisture.moistureTopic()+light_object.lightTopic()+"\n";
+  Wire.write(res.c_str());
 }
-  String res=water.waterTopic()+moisture.moistureTopic()+temp_humidTopic()+"\n";
+  String res=water.waterTopic()+moisture.moistureTopic()+temp_humidTopic()+light_object.lightTopic()+"\n";
   Wire.write(res.c_str());
 }
    
@@ -47,7 +46,7 @@ void loop() {
  Serial.begin(9600);
 }
 
-String res=water.waterTopic()+moisture.moistureTopic()+temp_humidTopic()+"\n";
+String res=water.waterTopic()+moisture.moistureTopic()+light_object.lightTopic()+temp_humidTopic()+"\n";
 Serial.println(res);
 delay(1000);
 }   
